@@ -38,7 +38,7 @@ public class SportGameEngine {
     public void run() {
 
         for (Match match : matches) {
-            match.registerUpdateMatchListeners(scoreBoard.getUpdateScoreListener());
+            match.registerUpdateMatchListeners(scoreBoard.getMatchEventListener());
             final Future<Boolean> submit = executorService.submit(match::start);
             matchesThreads.add(submit);
         }

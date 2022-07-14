@@ -8,7 +8,7 @@ public abstract class ScoreBoard {
 
     public abstract boolean show();
 
-    public MatchEventListener getUpdateScoreListener() {
+    public MatchEventListener getMatchEventListener() {
         return updateScoreListener;
     }
 
