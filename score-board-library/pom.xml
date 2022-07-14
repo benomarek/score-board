@@ -14,15 +14,17 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/de.vandermeer/asciitable -->
         <dependency>
             <groupId>de.vandermeer</groupId>
             <artifactId>asciitable</artifactId>
             <version>0.3.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-    <!-- https://mvnrepository.com/artifact/ascii-table/ascii-table -->
-
-
 </project>

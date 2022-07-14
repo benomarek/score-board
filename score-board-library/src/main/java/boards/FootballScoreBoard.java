@@ -4,9 +4,10 @@ import boards.printer.ScoreBoardPrinter;
 import boards.printer.console.ConsolePrinter;
 import boards.printer.records.FootballScoreBoardRecord;
 import boards.printer.records.ScoreBoardRecord;
+import exceptions.FootballScoreBoardException;
 import matches.Match;
-import messaging.MatchFinishedMsg;
 import messaging.MatchEventListener;
+import messaging.MatchFinishedMsg;
 import messaging.UpdateScoreMsg;
 
 import java.util.HashMap;
@@ -16,12 +17,16 @@ import java.util.stream.Collectors;
 
 public class FootballScoreBoard extends ScoreBoard {
 
-    ScoreBoardPrinter scoreBoardPrinter;
+    private final ScoreBoardPrinter scoreBoardPrinter;
     private final Map<String, Match> allMatchesById = new HashMap<>();
     private final Map<String, Match> liveMatchesById = new HashMap<>();
 
     public FootballScoreBoard(List<Match> matches) {
         this.updateScoreListener = new FootballEventListener();
+
+        if (matches == null || matches.isEmpty()) {
+            throw new FootballScoreBoardException("Minimum one match is required");
+        }
 
         final Map<String, Match> newMatchesById = matches.stream()
                 .collect(Collectors.toMap(Match::getMatchId, match -> match));
@@ -35,7 +40,7 @@ public class FootballScoreBoard extends ScoreBoard {
     public boolean show() {
 
         if (liveMatchesById.isEmpty()) {
-            scoreBoardPrinter.printTotalScore(getAllMatchesToRecordsSorted());
+            scoreBoardPrinter.printTotalScore(getAllScoreBoardRecordsSorted());
             return true;
         }
 
@@ -50,7 +55,7 @@ public class FootballScoreBoard extends ScoreBoard {
                 .collect(Collectors.toList());
     }
 
-    private List<ScoreBoardRecord> getAllMatchesToRecordsSorted() {
+    private List<ScoreBoardRecord> getAllScoreBoardRecordsSorted() {
         return allMatchesById.values().stream()
                 .sorted((o1, o2) -> Integer.compare(o2.getScore().getTotal(), o1.getScore().getTotal()))
                 .map(m -> new FootballScoreBoardRecord(m.getHome().getName(),
@@ -58,14 +63,17 @@ public class FootballScoreBoard extends ScoreBoard {
                 .collect(Collectors.toList());
     }
 
-
     class FootballEventListener implements MatchEventListener {
 
         @Override
         public void notifyUpdateScore(UpdateScoreMsg updateScoreMsg) {
-            liveMatchesById.get(updateScoreMsg.getMatchId())
-                    .updateScore(updateScoreMsg.getScore());
 
+            final Match match = liveMatchesById.get(updateScoreMsg.getMatchId());
+            if (match == null) {
+                return;
+            }
+
+            match.updateScore(updateScoreMsg.getScore());
             show();
         }
 

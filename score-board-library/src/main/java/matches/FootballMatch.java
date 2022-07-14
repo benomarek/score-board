@@ -1,8 +1,7 @@
 package matches;
 
-import exceptions.MatchException;
-import messaging.MatchFinishedMsg;
 import messaging.MatchEventListener;
+import messaging.MatchFinishedMsg;
 import messaging.UpdateScoreMsg;
 import teams.FootballTeam;
 
@@ -10,25 +9,22 @@ import java.util.Random;
 
 public class FootballMatch extends Match {
 
-    private static final int DurationInMin = 90;
-
+    private static final int DURATION_IN_MIN = 90;
+    private int totalDuration;
+    private final Random random = new Random();
     private int currentMinutes = 0;
 
     public FootballMatch(FootballTeam home, FootballTeam away) {
         super(home, away);
+        totalDuration = DURATION_IN_MIN + random.nextInt(5); // + stoppage time
     }
 
     @Override
     public boolean start() {
 
-        final Random random = new Random();
-
-        int totalDuration = DurationInMin + random.nextInt(5); // + stoppage time
-
         for (currentMinutes = 0; currentMinutes < totalDuration; currentMinutes++) {
             try {
-
-                //basic alg. to simulate football game
+                //football game simulator
                 Thread.sleep(random.nextInt(500));
 
                 int rnd = random.nextInt(totalDuration);
@@ -54,7 +50,7 @@ public class FootballMatch extends Match {
 
     @Override
     public boolean isFinished() {
-        return currentMinutes == DurationInMin;
+        return currentMinutes == totalDuration;
     }
 
     @Override

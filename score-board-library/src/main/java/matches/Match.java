@@ -1,8 +1,8 @@
 package matches;
 
 import exceptions.MatchException;
-import scores.Score;
 import messaging.MatchEventListener;
+import scores.Score;
 import teams.Team;
 
 import java.util.ArrayList;
@@ -19,12 +19,12 @@ public abstract class Match {
 
     protected Match(Team home, Team away) {
 
-        if (home == null || away == null){
-            throw  new MatchException(String.format("One of the team is null home=%s, away=%s", home, away));
+        if (home == null || away == null) {
+            throw new MatchException(String.format("One of the team is null home=%s, away=%s", home, away));
         }
 
-        if (home.equals(away)){
-            throw  new MatchException("Home team and Away is the same.");
+        if (home.equals(away)) {
+            throw new MatchException("Home team and Away is the same.");
         }
 
         this.home = home;
@@ -46,15 +46,23 @@ public abstract class Match {
         return away;
     }
 
+    public String getHomeName() {
+        return home.getName();
+    }
+
+    public String getAwayName() {
+        return home.getName();
+    }
+
     public String getMatchId() {
         return matchId;
     }
 
-    public void registerUpdateMatchListeners(MatchEventListener matchEventListener){
+    public void registerUpdateMatchListeners(MatchEventListener matchEventListener) {
         matchEventListeners.add(matchEventListener);
     }
 
-    public void updateScore(Score score){
+    public void updateScore(Score score) {
         this.score.setHome(score.getHome());
         this.score.setAway(score.getAway());
     }

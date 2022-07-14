@@ -2,7 +2,7 @@ package boards.printer.console;
 
 import java.io.IOException;
 
-public class UnixConsolePrinter extends ConsolePrinter{
+public class UnixConsolePrinter extends ConsolePrinter {
 
     @Override
     public void cleanConsole() {

@@ -1,7 +1,8 @@
-package game;
+package game.engine;
 
 import boards.FootballScoreBoard;
 import boards.ScoreBoard;
+import exceptions.SportGameEngineException;
 import matches.Match;
 
 import java.util.ArrayList;
@@ -20,12 +21,17 @@ public class SportGameEngine {
     List<Future<Boolean>> matchesThreads = new ArrayList<>();
 
     public SportGameEngine(List<Match> matches) {
+
+        if (matches == null || matches.isEmpty()) {
+            throw new SportGameEngineException("Minimum one match is required");
+        }
+
         this.matches = matches;
         this.scoreBoard = new FootballScoreBoard(matches);
         this.executorService = Executors.newFixedThreadPool(matches.size() + 1); //+1 thread for scoreboard
     }
 
-    public SportGameEngine(Match match) {
+    public SportGameEngine(Match... match) {
         this(List.of(match));
     }
 
@@ -38,15 +44,16 @@ public class SportGameEngine {
         }
 
         matchesThreads.add(executorService.submit(scoreBoard::show));
+
+        waitForAllMatchesFinish();
     }
 
-    public void waitForAllMatchesFinish() {
+    private void waitForAllMatchesFinish() {
         //wait for finish all
         for (Future<Boolean> future : matchesThreads) {
             try {
                 future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+            } catch (InterruptedException | ExecutionException ignored) {
             }
         }
 

@@ -1,6 +1,6 @@
 package executable;
 
-import game.SportGameEngine;
+import game.engine.SportGameEngine;
 import matches.FootballMatch;
 import matches.Match;
 import teams.FootballTeam;
@@ -28,13 +28,16 @@ public class Main {
         FootballTeam argentina = new FootballTeam("Argentina");
         FootballTeam australia = new FootballTeam("Australia");
 
-        List<FootballTeam> teams = new ArrayList<>(List.of(mexico, canada, spain, brazil, german, france, uruguay, italy, argentina, australia));
+        List<FootballTeam> teams = new ArrayList<>(
+                List.of(mexico, canada, spain, brazil, german, france, uruguay, italy, argentina, australia)
+        );
         Collections.shuffle(teams);
 
         final List<Match> matches = new ArrayList<>();
 
         if (teams.size() % 2 != 0){
-            System.err.println("Size of teams must be even number.");
+            System.err.println("Size of teams must be an even number.");
+            return;
         }
 
         for (int i = 0; i < teams.size(); ) {
@@ -43,7 +46,6 @@ public class Main {
 
         SportGameEngine gameEngine = new SportGameEngine(matches);
         gameEngine.run();
-        gameEngine.waitForAllMatchesFinish();
 
     }
 }

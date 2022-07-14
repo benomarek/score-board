@@ -13,6 +13,7 @@ public abstract class Team {
         if (name == null || "".equals(name)) {
             throw new TeamException("Team name is required.");
         }
+
         this.name = name;
     }
 

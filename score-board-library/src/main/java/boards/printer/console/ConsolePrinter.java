@@ -14,13 +14,13 @@ public abstract class ConsolePrinter implements ScoreBoardPrinter {
 
     public abstract void cleanConsole();
 
-    public static ConsolePrinter instanceByOs(){
+    public static ConsolePrinter instanceByOs() {
 
         if (OsValidator.isWindows()) {
             return new WindowsConsolePrinter();
-        }else if (OsValidator.isUnix()){
-            return  new UnixConsolePrinter();
-        }else {
+        } else if (OsValidator.isUnix()) {
+            return new UnixConsolePrinter();
+        } else {
             throw new RuntimeException("Operation system not supported - Supported OS: Windows, Unix");
         }
     }
@@ -30,7 +30,7 @@ public abstract class ConsolePrinter implements ScoreBoardPrinter {
 
         cleanConsole();
 
-        if (recordsToPrint.isEmpty()){
+        if (recordsToPrint.isEmpty()) {
             return;
         }
         System.out.flush();
@@ -56,7 +56,7 @@ public abstract class ConsolePrinter implements ScoreBoardPrinter {
     public void printTotalScore(List<ScoreBoardRecord> recordsToPrint) {
         cleanConsole();
 
-        if (recordsToPrint.isEmpty()){
+        if (recordsToPrint.isEmpty()) {
             return;
         }
 

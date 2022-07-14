@@ -10,7 +10,7 @@ public class Score {
         this.away = 0;
     }
 
-    public int getTotal(){
+    public int getTotal() {
         return home + away;
     }
 
