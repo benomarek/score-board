@@ -46,18 +46,24 @@ public class SportGameEngine {
 
         scoreBoardThread = executorService.submit(scoreBoard::show);
 
-        try {
-            waitAllThreadsDone();
-        } catch (ExecutionException | InterruptedException ignored) {
-        }
+        waitAllThreadsDone();
+
+        executorService.shutdownNow();
+
     }
 
-    private void waitAllThreadsDone() throws ExecutionException, InterruptedException {
+    private void waitAllThreadsDone() {
         //wait for finish all
         for (Future<Boolean> future : sportEventThreads) {
+            try {
                 future.get();
+            } catch (InterruptedException | ExecutionException ignored) {
+            }
         }
-        scoreBoardThread.get();
-        executorService.shutdownNow();
+        try {
+            scoreBoardThread.get();
+        } catch (InterruptedException | ExecutionException ignored) {
+        }
+
     }
 }
