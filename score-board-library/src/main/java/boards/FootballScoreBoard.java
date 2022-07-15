@@ -22,7 +22,7 @@ public class FootballScoreBoard extends ScoreBoard {
     private final Map<String, Match> liveMatchesById = new HashMap<>();
 
     public FootballScoreBoard(List<Match> matches) {
-        this.updateScoreListener = new FootballEventListener();
+        this.matchEventListener = new FootballEventListener();
 
         if (matches == null || matches.isEmpty()) {
             throw new FootballScoreBoardException("Minimum one match is required");

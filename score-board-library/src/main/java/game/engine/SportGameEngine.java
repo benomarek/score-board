@@ -18,7 +18,8 @@ public class SportGameEngine {
     private final ScoreBoard scoreBoard;
     private final ExecutorService executorService;
 
-    List<Future<Boolean>> matchesThreads = new ArrayList<>();
+    private final List<Future<Boolean>> sportEventThreads = new ArrayList<>();
+    private Future<Boolean> scoreBoardThread;
 
     public SportGameEngine(List<Match> matches) {
 
@@ -40,23 +41,23 @@ public class SportGameEngine {
         for (Match match : matches) {
             match.registerUpdateMatchListeners(scoreBoard.getMatchEventListener());
             final Future<Boolean> submit = executorService.submit(match::start);
-            matchesThreads.add(submit);
+            sportEventThreads.add(submit);
         }
 
-        matchesThreads.add(executorService.submit(scoreBoard::show));
+        scoreBoardThread = executorService.submit(scoreBoard::show);
 
-        waitForAllMatchesFinish();
+        try {
+            waitAllThreadsDone();
+        } catch (ExecutionException | InterruptedException ignored) {
+        }
     }
 
-    private void waitForAllMatchesFinish() {
+    private void waitAllThreadsDone() throws ExecutionException, InterruptedException {
         //wait for finish all
-        for (Future<Boolean> future : matchesThreads) {
-            try {
+        for (Future<Boolean> future : sportEventThreads) {
                 future.get();
-            } catch (InterruptedException | ExecutionException ignored) {
-            }
         }
-
+        scoreBoardThread.get();
         executorService.shutdownNow();
     }
 }

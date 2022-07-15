@@ -10,7 +10,7 @@ import java.util.Random;
 public class FootballMatch extends Match {
 
     private static final int DURATION_IN_MIN = 90;
-    private int totalDuration;
+    private final int totalDuration;
     private final Random random = new Random();
     private int currentMinutes = 0;
 
@@ -32,8 +32,10 @@ public class FootballMatch extends Match {
                         rnd == (currentMinutes + random.nextInt(7)) ||
                         rnd == (currentMinutes - random.nextInt(7))) {
 
-                    for (MatchEventListener updateScoreListener : matchEventListeners) {
-                        updateScoreListener.notifyUpdateScore(new UpdateScoreMsg(getMatchId(), rnd % 2 == 0 ? score.incrementHome() : score.incrementAway()));
+                    for (MatchEventListener matchEventListener : matchEventListeners) {
+                        matchEventListener.notifyUpdateScore(
+                                new UpdateScoreMsg(getMatchId(), rnd % 2 == 0 ? score.incrementHome() : score.incrementAway())
+                        );
                     }
                 }
 
@@ -41,8 +43,8 @@ public class FootballMatch extends Match {
 
             }
         }
-        for (MatchEventListener updateScoreListener : matchEventListeners) {
-            updateScoreListener.notifyEndOfMatch(new MatchFinishedMsg(matchId));
+        for (MatchEventListener matchEventListener : matchEventListeners) {
+            matchEventListener.notifyEndOfMatch(new MatchFinishedMsg(matchId));
         }
 
         return true;
